@@ -1,6 +1,6 @@
 {
   "name": "node",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Repo oficial del curso Desarrollo Backend con Node.js",
   "main": "app.js",
   "scripts": {
@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/Sciuttomatias/node.js/issues"
   },
-  "homepage": "https://github.com/Sciuttomatias/node.js#readme"
+  "homepage": "https://github.com/Sciuttomatias/node.js#readme",
+  "dependencies": {
+    "http": "0.0.1-security"
+  }
 }
