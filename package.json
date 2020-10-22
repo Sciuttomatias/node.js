@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/Sciuttomatias/node.js#readme",
   "dependencies": {
-    "http": "0.0.1-security"
+    "express": "^4.17.1"
   }
 }

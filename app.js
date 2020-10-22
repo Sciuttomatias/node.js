@@ -1,12 +1,13 @@
-const http = require("http")
+const express = require("express")
+
+const app = express()
 
 const port = 1000
 
-const server = (req, res) => {
+app.listen(port)
 
-    res.end("I am your server..")
+app.get(("/contacto"), (req, res) => {
 
-}
+    res.end("Desde aca vamos a contactarnos..")
 
-http.createServer(server).listen(port)
-
+})
