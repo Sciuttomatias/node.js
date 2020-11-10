@@ -7,10 +7,15 @@
 	</head>
 	<body class="container">
 		<h1>Formulario HTML</h1>
-		<form action="/enviar" method="post">
-​
+		<form action="/enviar" method="post" enctype="multipart/form-data">
+​	
 			<label for="nombre">Ingrese su nombre:</label>
-			<input class="form-control" type="text" name="nombre" placeholder="Ej: Obi Juan Kenobi">
+			<input class="form-control" type="text" name="nombre" placeholder="Ej: Obi Juan">
+
+			<br>
+
+			<label for="apellido">Ingrese su apellido:</label>
+			<input class="form-control" type="text" name="apellido" placeholder="Ej: Kenobi">
 			
 			<br>
 ​
@@ -28,7 +33,12 @@
 			</select>
 ​
 			<br>
-​
+			​
+			<label for="mensaje">Elija su archivo:</label>
+			<input class="form-control" type="file" name="archivo" ></input>
+			​
+			<br>
+
 			<label for="mensaje">Ingrese su mensaje:</label>
 			<textarea class="form-control" name="mensaje" cols="30" rows="10" placeholder="Max: 100 caracteres"></textarea>
 ​
