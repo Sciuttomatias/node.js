@@ -14,7 +14,7 @@ const expressFileUpload = require("express-fileupload")
 
 require('dotenv').config()
 
-const {MongoClient} = require("mongodb")
+const {MongoClient, ObjectId} = require("mongodb")
 
 const API = express.Router()
 
@@ -82,7 +82,7 @@ app.use( bodyParser.json() )
 
 app.post(("/enviar"), (req, res) => {
 
-    const contacto = req.body
+    const contacto = req.body  // <-- Datos desde HTTP Query String
 
     const { archivo } = req.files
 
@@ -145,11 +145,43 @@ API.post(("/v1/pelicula"), async (req, res) => {
 
 API.get(("/v1/pelicula"), async (req, res) => {
 
+    // console.log( req.query.id ) // <-- Datos desde HTTP Query String
+
     const db = await conecctioDB()
 
     const peliculas = await db.collection("peliculas").find({}).toArray()
 
     res.json(peliculas)
+})
+
+API.get(("/v1/pelicula/:id"), async (req, res) => {
+
+    const { id } = req.params
+
+    //Aca deberia ir la validacion de si el ID tiene datos...
+
+    try{
+
+        const db = await conecctioDB()
+
+        const peliculas = await db.collection("peliculas")
+    
+        const busqueda = { "_id" : ObjectId(id) }
+    
+        const resultado = await peliculas.find( busqueda ).toArray()
+
+        return res.json(resultado)
+
+    } catch (error) {
+
+        return res.json( {ok: false, msg: "Pelicula no encontrada"} )
+
+    }
+
+   
+
+    res.end( resultado )
+
 })
 
 ///Update///
