@@ -12,18 +12,30 @@ const joi = require("joi")
 
 const expressFileUpload = require("express-fileupload")
 
-const mongodb = require("mongodb").MongoClient
+require('dotenv').config()
+
+const {MongoClient} = require("mongodb")
 
 const API = express.Router()
+
+const { HOST_MAIL,
+        PUERTO_MAIL,
+        CASILLA_MAIL,
+        CLAVE_MAIL,
+        MONGODB_USER,
+        MONGODB_PASS,
+        MONGODB_HOST,
+        MONGODB_BASE
+    } = process.env
 
 const port = 1000
 
 const miniOutlook = nodemailer.createTransport({
-    host: process.env.HOST_MAIL,
-    port: process.env.PUERTO_MAIL,
+    host: HOST_MAIL,
+    port: PUERTO_MAIL,
     auth: {
-        user: process.env.CASILLA_MAIL,
-        pass: process.env.CLAVE_MAIL
+        user: CASILLA_MAIL,
+        pass: CLAVE_MAIL
     }
 })
 
@@ -34,6 +46,8 @@ const schema = joi.object({
     mensaje: joi.string().required() 
 })
 
+const conecctionString = `mongodb+srv://${MONGODB_USER}:${MONGODB_PASS}@${MONGODB_HOST}/${MONGODB_BASE}?retryWrites=true&w=majority`
+  
 app.listen(port)
 
 app.use( express.static("public") )
@@ -55,7 +69,6 @@ app.set("view wngine", "handlebars")
 //////////////////Body-Parser Middleware//////////////////
 app.use( bodyParser.urlencoded( {extended: false} ) )
 app.use( bodyParser.json() )
-
 
 /////////////////////////////////////////////////////////////////////////////////////
 
@@ -106,7 +119,7 @@ app.post(("/enviar"), (req, res) => {
 })
 
 /////////////// API  ///////////////////////
-
+ 
 
 ///Crear///
 
@@ -119,12 +132,15 @@ API.post(("/v1/pelicula"), (req, res) => {
 
 ////Read///
 
-API.get(("/v1/pelicula"), (req, res) => {
-    //db.getCollection('peliculas').find({})
-    const respuesta = {
-        msg: "Acá vamos a ver peliculas..."
-    }
-    res.json(respuesta)
+API.get(("/v1/pelicula"), async (req, res) => {
+
+    const client = await MongoClient.connect(conecctionString, {useUnifiedTopology : true})
+
+    const db = await client.db("catalogo")
+    
+    const peliculas = await db.collection("peliculas").find({}).toArray()
+
+    res.json(peliculas)
 })
 
 ///Update///
@@ -144,11 +160,3 @@ API.delete("/v1/pelicula", (req, res) => {
     }
     res.json(respuesta)
 })
-
-
-/////////Conectando con MongoDB//////////////////
-
-
-
-
-/////////////////////////////////////////////////
