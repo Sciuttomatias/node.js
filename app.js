@@ -47,7 +47,15 @@ const schema = joi.object({
 })
 
 const conecctionString = `mongodb+srv://${MONGODB_USER}:${MONGODB_PASS}@${MONGODB_HOST}/${MONGODB_BASE}?retryWrites=true&w=majority`
-  
+
+const conecctioDB = async () => {
+
+    const client = await MongoClient.connect(conecctionString, {useUnifiedTopology : true})
+
+    return await client.db("catalogo")
+
+}
+
 app.listen(port)
 
 app.use( express.static("public") )
@@ -123,7 +131,10 @@ app.post(("/enviar"), (req, res) => {
 
 ///Crear///
 
-API.post(("/v1/pelicula"), (req, res) => {
+API.post(("/v1/pelicula"), async (req, res) => {
+
+    const db = await conecctioDB()
+
     const respuesta = {
         msg: "Acá vamos a crear peliculas..."
     }
@@ -134,10 +145,8 @@ API.post(("/v1/pelicula"), (req, res) => {
 
 API.get(("/v1/pelicula"), async (req, res) => {
 
-    const client = await MongoClient.connect(conecctionString, {useUnifiedTopology : true})
+    const db = await conecctioDB()
 
-    const db = await client.db("catalogo")
-    
     const peliculas = await db.collection("peliculas").find({}).toArray()
 
     res.json(peliculas)
@@ -145,7 +154,10 @@ API.get(("/v1/pelicula"), async (req, res) => {
 
 ///Update///
 
-API.put("/v1/pelicula", (req, res) => {
+API.put("/v1/pelicula", async (req, res) => {
+
+    const db = await conecctioDB()
+
     const respuesta = {
         msg: "Acá vamos a actualizar peliculas..."
     }
@@ -154,7 +166,10 @@ API.put("/v1/pelicula", (req, res) => {
 
 ////Delete////
 
-API.delete("/v1/pelicula", (req, res) => {
+API.delete("/v1/pelicula", async (req, res) => {
+
+    const db = await conecctioDB()
+
     const respuesta = {
         msg: "Acá vamos a borar peliculas..."
     }
