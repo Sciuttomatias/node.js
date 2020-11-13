@@ -133,10 +133,19 @@ app.post(("/enviar"), (req, res) => {
 
 API.post(("/v1/pelicula"), async (req, res) => {
 
+    const pelicula = req.body
+
     const db = await conecctioDB()
 
+    const peliculas = await db.collection("peliculas")
+
+    const { result } = await peliculas.insertOne( pelicula )
+
+    const { ok } = result
+
     const respuesta = {
-        msg: "Acá vamos a crear peliculas..."
+        ok,
+        msg: (ok == 1) ? "Pelicula guardada exitosamente" : "Error al guardar la pelicula" // <-- Operador ternario
     }
     res.json(respuesta)
 })
